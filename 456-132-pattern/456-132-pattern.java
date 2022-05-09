@@ -1,31 +1,36 @@
 class Solution {
     public boolean find132pattern(int[] nums) {
         int size = nums.length;
-
         if (size < 3) return false;
 
-        // min[i] : nums[0:i] 부분배열의 최소값 => 132 패턴의 1에 해당
+        // 패턴 1 후보 숫자들
+        // min[i] : nums[0:i] 중 최소값
         int[] min = new int[size];
         min[0] = nums[0];
         for (int i = 1; i < size; i++) min[i] = Math.min(min[i - 1], nums[i]);
 
+        // 패턴 2 후보 숫자들
         Stack<Integer> stack = new Stack<>();
-        for (int i = size-1; i >= 0; i--) {
-            // 132 패턴에서 3에 해당하는 부분 탐색
-            if (nums[i] <= min[i]) continue;
 
-            // 현재 최소값보다 작은 숫자들 스택에서 제거
-            // => 스택의 나머지 부분이 2에 해당하는 후보들
-            while (!stack.isEmpty() && stack.peek() <= min[i]) stack.pop();
-
-            // 이전 숫자 중에 현재 숫자보다 작은 숫자 있으면 (2에 해당) 참
-            if(!stack.isEmpty() && stack.peek() < nums[i]) return true;
-
-
-            // 현재 숫자 스택에 저장
-            stack.push(nums[i]);
+        int pattern3;
+        for (int i = size - 1; i >= 1; i--) {
+            // nums[i] : 패턴 3 후보 숫자
+            if(min[i] >= nums[i]) {
+                // 패턴 1보다 작거나 같으면 패턴3&2 후보로 불가능
+                continue;
+            }
+            
+            pattern3 = nums[i];
+            
+            // 패턴 2 후보 중에 패턴 1보다 작거나 같은 숫자들 제거
+            while(!stack.isEmpty() && stack.peek() <= min[i]) stack.pop();
+            
+            if(!stack.isEmpty() && stack.peek() < pattern3) return true;
+            
+            
+            // 현재 숫자를 패턴 2 후보로 저장
+            stack.push(pattern3);
         }
-
 
         return false;
     }
