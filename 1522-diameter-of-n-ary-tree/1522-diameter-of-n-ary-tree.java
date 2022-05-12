@@ -48,9 +48,9 @@ class Solution {
             } else if (curHeight > max2) {
                 max2 = curHeight;
             }
-
-            ans = Math.max(ans, max1 + max2);
+            
         }
+        ans = Math.max(ans, max1 + max2);
 
         return max1;
     }
