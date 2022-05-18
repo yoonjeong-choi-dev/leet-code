@@ -1,12 +1,12 @@
 class Solution {
     private List<List<Integer>> graph;
     private int[] discoveredOrder;
-    private Map<Pair<Integer, Integer>, Boolean> edges;
+    private Set<Pair<Integer, Integer>> edges;
 
     public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
         // Step 1 : Make the graph
         graph = new ArrayList<>(n);
-        edges = new HashMap<>();
+        edges = new HashSet<>();
         discoveredOrder = new int[n];
         for (int i = 0; i < n; i++) {
             graph.add(new ArrayList<>());
@@ -18,14 +18,14 @@ class Solution {
 
             int start = Math.min(e.get(0), e.get(1));
             int end = Math.max(e.get(0), e.get(1));
-            edges.put(new Pair<>(start, end), true);
+            edges.add(new Pair<>(start, end));
         }
 
         // Step 2 : Recursive Search to find bridges
         dfs(0, 0);
 
         List<List<Integer>> ans = new ArrayList<>();
-        for(Pair<Integer, Integer> conn : edges.keySet()) {
+        for(Pair<Integer, Integer> conn : edges) {
             ans.add(new ArrayList<Integer>(Arrays.asList(conn.getKey(), conn.getValue())));
         }
 
