@@ -3,19 +3,16 @@ class Solution {
     private boolean[] isVisited;
 
     public int makeConnected(int n, int[][] connections) {
-        // 엣지 개수가 n-1 보다 작으면 불가능
         if (n - 1 > connections.length) return -1;
 
-
+        isVisited = new boolean[n];
         graph = new ArrayList<>(n);
         for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
-
-        for (int[] conn : connections) {
-            graph.get(conn[0]).add(conn[1]);
-            graph.get(conn[1]).add(conn[0]);
+        for (int[] con : connections) {
+            graph.get(con[0]).add(con[1]);
+            graph.get(con[1]).add(con[0]);
         }
 
-        isVisited = new boolean[n];
         int numComponent = 0;
         for (int i = 0; i < n; i++) {
             if (!isVisited[i]) {
@@ -30,9 +27,7 @@ class Solution {
     private void dfs(int node) {
         isVisited[node] = true;
         for (int next : graph.get(node)) {
-            if (!isVisited[next]) {
-                dfs(next);
-            }
+            if (!isVisited[next]) dfs(next);
         }
     }
 }
