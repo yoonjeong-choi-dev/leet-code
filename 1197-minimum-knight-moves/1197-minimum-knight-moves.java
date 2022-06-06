@@ -44,6 +44,7 @@ class Solution {
         }
 
 
-        return steps;
+        // Never Reach : It is guaranteed the answer exists
+        return -1;
     }
 }
