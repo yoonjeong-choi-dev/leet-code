@@ -1,30 +1,44 @@
 class Solution {
+    class TrieNode {
+        Map<Character, TrieNode> children;
+        boolean terminated;
+
+        public TrieNode() {
+            children = new HashMap<>();
+            terminated = false;
+        }
+    }
+    
     public String longestCommonPrefix(String[] strs) {
-        int idx = 0;
-        boolean allMatched;
+        TrieNode root = new TrieNode();
 
-        Character curChar;
-        while (true) {
-            allMatched = true;
-            curChar = null;
-            for (String s : strs) {
-                if (idx >= s.length()) {
-                    allMatched = false;
-                    break;
-                }
+        // Add strings to trie
+        TrieNode cur;
+        for (String s : strs) {
+            cur = root;
+            for (char c : s.toCharArray()) {
+                if (!cur.children.containsKey(c)) cur.children.put(c, new TrieNode());
 
-                if (curChar == null) {
-                    curChar = s.charAt(idx);
-                } else if (curChar != s.charAt(idx)) {
-                    allMatched = false;
-                    break;
-                }
+                cur = cur.children.get(c);
             }
 
-            if (!allMatched) break;
-            idx++;
+            cur.terminated = true;
         }
 
-        return strs[0].substring(0, idx);
+        // find longest prefix
+        int len = 0;
+        cur = root;
+        while (true) {
+            // 특정 문자열의 끝에 온 경우
+            if (cur.terminated) break;
+
+            // 2갈래로 나뉘어 지는 경우
+            if (cur.children.size() != 1) break;
+
+            len++;
+            cur = (TrieNode) cur.children.values().toArray()[0];
+        }
+
+        return strs[0].substring(0, len);
     }
 }
