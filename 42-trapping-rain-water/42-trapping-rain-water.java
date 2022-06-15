@@ -1,21 +1,22 @@
 class Solution {
     public int trap(int[] height) {
-        int size = height.length;
-        if (size == 0) return 0;
+        int len = height.length;
+        if (len == 0) return 0;
 
-        // height[0:i] 중 최대값
-        int[] leftMax = new int[size];
-        leftMax[0] = height[0];
-        for (int i = 1; i < size; i++) leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+        // i번째 위치에 쌓이는 물 높이는 양쪽에서 가장 높은 막대기에 의존
+        // left[i] : [0,i] 에서 최대값, right[i] : [i:len-1] 에서 최대값
+        int[] left = new int[len];
+        left[0] = height[0];
+        for (int i = 1; i < len; i++) left[i] = Math.max(height[i], left[i - 1]);
 
-        // height[i:size-1] 중 최대값
-        int[] rightMax = new int[size];
-        rightMax[size - 1] = height[size - 1];
-        for (int i = size - 2; i >= 0; i--) rightMax[i] = Math.max(rightMax[i + 1], height[i]);
+        int[] right = new int[len];
+        right[len - 1] = height[len - 1];
+        for (int i = len - 2; i >= 0; i--) right[i] = Math.max(height[i], right[i + 1]);
 
-        // i 번째 위치에 채워지는 물의 양 => 양옆의 최대값들에 의해 계산
         int ans = 0;
-        for (int i = 0; i < size; i++) ans += Math.min(leftMax[i], rightMax[i]) - height[i];
+        for (int i = 0; i < len; i++) {
+            ans += Math.min(left[i], right[i]) - height[i];
+        }
         return ans;
     }
 }
