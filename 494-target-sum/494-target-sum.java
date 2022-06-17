@@ -21,15 +21,18 @@ class Solution {
 
         // 두번째 요소부터 bottom-up
         int[] next;
-        for (int i = 1; i < len; i++) {
+        for (int level = 1; level < len; level++) {
             // next : 다음 단계에 대한 dp
             next = new int[dpSize];
 
-            for (int sum = -totalSum; sum <= totalSum; sum++) {
+            for (int i = 0; i < dpSize; i++) {
                 // nums[:i] 까지의 부분 문제에 대해 유효한 경로가 있는 경우
-                if(dp[sum+totalSum] != 0) {
-                    next[sum + nums[i] + totalSum] += dp[sum + totalSum];
-                    next[sum - nums[i] + totalSum] += dp[sum + totalSum];
+                // 유효한 경로 내에서는 i + nums[level] 및 i - nums[level] 값이 dp 범위 안에 들어감
+                // i.e (totalSum + i + nums[level]), (totalSum - i + nums[level]) 가 [-totalSum,totalSum] 안에 들어감
+                // => 유요한 인덱스
+                if (dp[i] != 0) {
+                    next[i + nums[level]] += dp[i];
+                    next[i - nums[level]] += dp[i];
                 }
             }
 
