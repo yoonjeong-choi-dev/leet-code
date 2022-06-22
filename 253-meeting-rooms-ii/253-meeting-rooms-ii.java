@@ -1,42 +1,34 @@
 class Solution {
     public int minMeetingRooms(int[][] intervals) {
-        int numIntervals = intervals.length;
-        if (numIntervals == 0) return 0;
-
-        Arrays.sort(intervals, new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                if (o1[0] != o2[0]) {
-                    return o1[0] - o2[0];
-                } else {
-                    return o1[1] - o2[1];
-                }
-            }
-        });
-
-        // 현재 배정된 미팅 룸들의 끝나는 시간을 오름차순으로 저장
-        PriorityQueue<Integer> endPq = new PriorityQueue<>(numIntervals, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
+        // 시작 시간이 빠른 순서로 정렬
+        Arrays.sort(intervals, new Comparator<int[]>(){
+           public int compare(int[] a, int[] b){
+               return a[0] - b[0];
+           } 
         });
         
+        // 먼저 끝나는 구간의 인덱스가 top 으로
+        PriorityQueue<Integer> reserved = new PriorityQueue<>(new Comparator<Integer>(){
+           public int compare(Integer a, Integer b){
+               return intervals[a][1] - intervals[b][1];
+           } 
+        });
+        
+        
         int ans = 1;
-
-        // 0번 미팅룸 배정 : 가장 먼저 시작하는 미팅
-        endPq.offer(intervals[0][1]);
-
-        for (int i = 1; i < numIntervals; i++) {
-            // 현재 미팅 시간이 할당된 미팅룸이 끝나고 배정되는 경우 큐에서 제거
-            if (intervals[i][0] >= endPq.peek()) {
-                endPq.poll();
-            }
-
-            // 현재 미팅룸 배정
-            endPq.offer(intervals[i][1]);
+        
+        int len = intervals.length;
+        int[] cur;
+        for(int i=0;i<len;i++){
+            cur = intervals[i];
             
-            ans = Math.max(ans, endPq.size());
+            // 현재 시작 시간보다 일찍 끝나는 구간들 정리
+            while(!reserved.isEmpty() && intervals[reserved.peek()][1] <= cur[0]) reserved.poll();
+            
+            // 현재 구간 예약
+            reserved.add(i);
+            
+            ans = Math.max(ans, reserved.size());
         }
         
         return ans;
