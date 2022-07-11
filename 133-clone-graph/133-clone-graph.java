@@ -19,38 +19,44 @@ class Node {
 */
 
 class Solution {
+    
+    private Map<Node, Node> oldToNew;
+    
     public Node cloneGraph(Node node) {
-        if (node == null) return null;
-
-        HashMap<Node, Node> oldToNew = new HashMap<>();
-        oldToNew.put(node, new Node(node.val));
-
+        if(node == null) return null;
+        
+        oldToNew = new HashMap<>();
+        
         Set<Node> visited = new HashSet<>();
         Queue<Node> bfs = new ArrayDeque<>();
         bfs.add(node);
         visited.add(node);
-
-        Node cur, copyCur, copyAdj;
-        while (!bfs.isEmpty()) {
-            cur = bfs.poll();
-
-            copyCur = oldToNew.get(cur);
-
-            for (Node adj : cur.neighbors) {
-                if (!oldToNew.containsKey(adj)) {
-                    oldToNew.put(adj, new Node(adj.val));
-                }
+        
+        Node curNode, cloneNode;
+        while(!bfs.isEmpty()) {
+            curNode = bfs.poll();
+            cloneNode = getClone(curNode);
+            
+            for(Node neighbor : curNode.neighbors) {
+                cloneNode.neighbors.add(getClone(neighbor));
                 
-                copyAdj = oldToNew.get(adj);
-                copyCur.neighbors.add(copyAdj);
-
-                if (!visited.contains(adj)) {
-                    visited.add(adj);
-                    bfs.add(adj);
+                if(!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    bfs.add(neighbor);
                 }
             }
         }
-
+        
+        return oldToNew.get(node);
+    }
+    
+    private Node getClone(Node node) {
+        if(node == null) return null;
+        
+        if(!oldToNew.containsKey(node)) {
+            oldToNew.put(node, new Node(node.val));
+        }
+        
         return oldToNew.get(node);
     }
 }
