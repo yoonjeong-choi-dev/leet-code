@@ -21,8 +21,6 @@ class Solution {
             if (!confused.containsKey(digits.get(i))) return false;
             converted[digitLen - 1 - i] = confused.get(digits.get(i));
         }
-        
-        System.out.println(Arrays.toString(converted));
 
         boolean isSame = true;
         for (int i = 0; i < digits.size(); i++) {
