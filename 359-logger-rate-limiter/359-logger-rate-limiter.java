@@ -8,18 +8,11 @@ class Logger {
         }
 
         public boolean shouldPrintMessage(int timestamp, String message) {
-            if (!logTime.containsKey(message)) {
-                logTime.put(message, timestamp);
-                return true;
-            } else {
-                int availableTime = logTime.get(message) + TERM;
-                if (timestamp >= availableTime) {
-                    logTime.put(message, timestamp);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+            int availableTime = logTime.getOrDefault(message, -TERM) + TERM;
+            if(timestamp < availableTime) return false;
+            
+            logTime.put(message, timestamp);
+            return true;
         }
 }
 
