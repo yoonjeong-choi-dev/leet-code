@@ -1,30 +1,26 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        // 시작점 순서로 정렬
-        Arrays.sort(intervals, new Comparator<int[]>() {
-            public int compare(int[] a, int[] b) {
-                return a[0] != b[0] ? a[0] - b[0] : a[1] - b[1];
-            }
+        Arrays.sort(intervals, new Comparator<int[]>(){
+           public int compare(int[] o1, int[] o2) {
+               return o1[0] != o2[0] ? o1[0] - o2[0] : o1[1] - o2[1];
+           } 
         });
         
         List<int[]> ans = new ArrayList<>();
         int start = intervals[0][0], end = intervals[0][1];
         
-        for(int i=1;i<intervals.length;i++){
-            // 현재 범위와 겹치지 않는 경우
-            if(intervals[i][0] > end) {
-                ans.add(new int[] {start, end});
-                
-                start = intervals[i][0];
-                end = intervals[i][1];
+        for(int[] interval : intervals) {
+            // 겹치는 경우 vs 안겹치는 경우
+            if(interval[0] <= end) {
+                end = Math.max(interval[1], end);
             } else {
-                end = Math.max(end, intervals[i][1]);
+                ans.add(new int[]{start, end});
+                start = interval[0];
+                end = interval[1];
             }
         }
         
-        // 마지막 처리
-        ans.add(new int[] {start, end});
-        
+        ans.add(new int[]{start, end});
         return ans.toArray(new int[ans.size()][2]);
     }
 }
