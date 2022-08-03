@@ -1,27 +1,22 @@
 class MyCalendar {
+    
+    // key : start, value: end
+    private TreeMap<Integer, Integer> books;
 
-    private List<int[]> booked = new ArrayList<>(1000);
-
-        public MyCalendar() {
-
-        }
-
-        public boolean book(int start, int end) {
-            boolean ans = true;
-            for (int[] b : booked) {
-                // 유효한 범위 : end <= b[0] || b[1] <= start
-                if(end > b[0] && b[1] >start) {
-                    ans = false;
-                    break;
-                }
-            }
-
-            if (ans) {
-                booked.add(new int[]{start, end});
-            }
-
-            return ans;
-        }
+    public MyCalendar() {
+        books = new TreeMap<>();
+    }
+    
+    public boolean book(int start, int end) {
+        Integer prevStart = books.floorKey(start);
+        Integer nextStart = books.ceilingKey(start);
+        
+        if(prevStart != null && start < books.get(prevStart)) return false;
+        if(nextStart != null && nextStart < end) return false;
+        
+        books.put(start, end);
+        return true;
+    }
 }
 
 /**
