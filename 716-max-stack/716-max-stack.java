@@ -1,43 +1,89 @@
+    class Node {
+        Node prev, next;
+        int val;
+
+        public Node(int val) {
+            this.val = val;
+        }
+    }
+
+    class DLL {
+        Node head, tail;
+
+        public DLL() {
+            head = new Node(-1);
+            tail = new Node(-1);
+            head.next = tail;
+            tail.prev = head;
+        }
+
+        public Node addLast(int val) {
+            Node node = new Node(val);
+            node.next = tail;
+            node.prev = tail.prev;
+
+            tail.prev.next = node;
+            tail.prev = node;
+            return node;
+        }
+
+        public int popLast() {
+            return remove(tail.prev).val;
+        }
+
+        public int peekLast() {
+            return tail.prev.val;
+        }
+
+        public Node remove(Node node) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+            return node;
+        }
+    }
+
+
     class MaxStack {
 
-        private Stack<Integer> stack;
-        private Stack<Integer> maxStack;
+        private TreeMap<Integer, List<Node>> sortedMap;
+        private DLL dll;
 
         public MaxStack() {
-            stack = new Stack<>();
-            maxStack = new Stack<>();
+            sortedMap = new TreeMap<>();
+            dll = new DLL();
         }
 
         public void push(int x) {
-            stack.push(x);
-
-            if (maxStack.isEmpty() || x >= maxStack.peek()) maxStack.push(x);
+            if (!sortedMap.containsKey(x)) sortedMap.put(x, new ArrayList<>());
+            Node node = dll.addLast(x);
+            sortedMap.get(x).add(node);
         }
 
         public int pop() {
-            int ret = stack.pop();
-            if (maxStack.peek() == ret) maxStack.pop();
-            return ret;
+            int val = dll.popLast();
+            List<Node> list = sortedMap.get(val);
+            list.remove(list.size() - 1);
+            if (list.isEmpty()) sortedMap.remove(val);
+            
+            return val;
         }
 
         public int top() {
-            return stack.peek();
+            return dll.peekLast();
         }
 
         public int peekMax() {
-            return maxStack.peek();
+            return sortedMap.lastKey();
         }
 
         public int popMax() {
-            int ret = maxStack.pop();
-
-            Stack<Integer> temp = new Stack<>();
-            while (stack.peek() != ret) temp.push(stack.pop());
-            stack.pop();
+            int val = peekMax();
+            List<Node> list = sortedMap.get(val);
+            Node toRemove = list.remove(list.size()-1);
+            dll.remove(toRemove);
+            if(list.isEmpty()) sortedMap.remove(val);
             
-            while(!temp.isEmpty()) this.push(temp.pop());
-            
-            return ret;
+            return val;
         }
     }
 
