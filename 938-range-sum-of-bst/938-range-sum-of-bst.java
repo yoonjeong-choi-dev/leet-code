@@ -26,8 +26,8 @@ class Solution {
 
             if (cur.val >= low && cur.val <= high) ans += cur.val;
 
-            if (cur.left != null) dfs.push(cur.left);
-            if (cur.right != null) dfs.push(cur.right);
+            if (cur.val > low && cur.left != null) dfs.push(cur.left);
+            if (cur.val < high && cur.right != null) dfs.push(cur.right);
         }
         return ans;
     }
