@@ -16,11 +16,22 @@ class Solution {
             // find i s.t partialSum[i-1] <= target < partialSum[i]
             int target = random.nextInt(totalSum);
 
-            int idx = 0;
-            for (; idx < partialSum.length; idx++) {
-                if (target < partialSum[idx]) return idx;
+            // 바운더리 처리
+            if (target < partialSum[0]) return 0;
+
+            int left = 1, right = partialSum.length - 1;
+            int mid;
+            while (left < right) {
+                mid = left + (right - left) / 2;
+                if (partialSum[mid - 1] <= target && target < partialSum[mid]) return mid;
+                else if (partialSum[mid] <= target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
             }
-            return idx - 1;
+
+            return left;
         }
 }
 
