@@ -16,35 +16,37 @@
 class Solution {
     public boolean isValidBST(TreeNode root) {
         Queue<TreeNode> bfs = new ArrayDeque<>();
-
-        // 현재 서브트리의 하한값 및 상한값
-        Queue<int[]> boundaryInfo = new ArrayDeque<>();
-
+        Queue<int[]> bound = new ArrayDeque<>();
+        
         bfs.add(root);
-        boundaryInfo.add(new int[]{Integer.MIN_VALUE, Integer.MAX_VALUE});
-
-        TreeNode curNode;
+        bound.add(new int[] {Integer.MIN_VALUE, Integer.MAX_VALUE});
+        
+        TreeNode node;
         int[] curBound;
+        int upper, lower;
+        
+        while(!bfs.isEmpty()) {
+            node = bfs.poll();
+            curBound = bound.poll();
+            lower = curBound[0];
+            upper = curBound[1];
 
-        while (!bfs.isEmpty()) {
-            curNode = bfs.poll();
-            curBound = boundaryInfo.poll();
-
-            if (curNode.left != null) {
-                if (curNode.val <= curNode.left.val) return false;
-                if(curNode.left.val < curBound[0]) return false;
-                bfs.add(curNode.left);
-                boundaryInfo.add(new int[]{curBound[0], curNode.val - 1});
+            
+            if(node.left != null) {
+                if(node.left.val >= node.val || node.left.val < lower) return false;
+                
+                bfs.add(node.left);
+                bound.add(new int[] {lower, node.val-1});
             }
-
-            if(curNode.right != null) {
-                if(curNode.val >= curNode.right.val) return false;
-                if(curNode.right.val > curBound[1]) return false;
-                bfs.add(curNode.right);
-                boundaryInfo.add(new int[] {curNode.val+1, curBound[1]});
+            
+            if(node.right != null) {
+                if(node.right.val <= node.val || node.right.val > upper) return false;
+                
+                bfs.add(node.right);
+                bound.add(new int[] {node.val+1, upper});
             }
         }
-
+        
         return true;
     }
 }
