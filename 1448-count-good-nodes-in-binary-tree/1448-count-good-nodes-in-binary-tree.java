@@ -17,33 +17,32 @@ class Solution {
     public int goodNodes(TreeNode root) {
         int ans = 0;
         
-        // bfs
         Queue<TreeNode> bfs = new ArrayDeque<>();
-        Queue<Integer> maxVal = new ArrayDeque<>();
-        
+        Queue<Integer> max = new ArrayDeque<>();
         bfs.add(root);
-        maxVal.add(root.val);
+        max.add(root.val);
         
         TreeNode curNode;
-        int curMax;
+        int curMax, nextMax;
         while(!bfs.isEmpty()) {
             curNode = bfs.poll();
-            curMax = maxVal.poll();
-
-            // visit
+            curMax = max.poll();
+            
             if(curNode.val >= curMax) ans++;
+            
+            nextMax = Math.max(curMax, curNode.val);
             
             if(curNode.left != null) {
                 bfs.add(curNode.left);
-                maxVal.add(Math.max(curMax, curNode.val));
+                max.add(nextMax);
             }
-
+            
             if(curNode.right != null) {
                 bfs.add(curNode.right);
-                maxVal.add(Math.max(curMax, curNode.val));
+                max.add(nextMax);
             }
         }
-        
         return ans;
+        
     }
 }
