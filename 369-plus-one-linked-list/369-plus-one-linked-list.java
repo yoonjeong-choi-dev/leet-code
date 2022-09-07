@@ -10,31 +10,26 @@
  */
 class Solution {
     public ListNode plusOne(ListNode head) {
-        ListNode cur = head;
         Stack<ListNode> stack = new Stack<>();
-        while (cur != null) {
+        ListNode cur = head;
+        while(cur != null) {
             stack.push(cur);
             cur = cur.next;
         }
-
-        int isCarry = 1;
-        while (!stack.isEmpty()) {
+        
+        int carry = 1;
+        while(!stack.isEmpty()){
             cur = stack.pop();
-            cur.val += isCarry;
-
-            if (cur.val > 9) {
+            cur.val += carry;
+            
+            if(cur.val > 9) {
                 cur.val -= 10;
-                isCarry = 1;
+                carry = 1;
             } else {
-                isCarry = 0;
+                carry = 0;
             }
         }
-
-        if (isCarry == 1) {
-            head = new ListNode(1, head);
-        }
-
-
-        return head;
+        
+        return carry == 1 ? new ListNode(1, head) : head;
     }
 }
