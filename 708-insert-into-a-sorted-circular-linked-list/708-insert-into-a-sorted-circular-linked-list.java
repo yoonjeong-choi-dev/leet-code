@@ -20,42 +20,32 @@ class Node {
 class Solution {
     public Node insert(Node head, int insertVal) {
         Node node = new Node(insertVal);
-
-        if (head == null) {
+        if(head == null) {
             node.next = node;
             return node;
         }
-
+        
+        // find prev.val > cur.val
+        // => cur.val is the minimum
         Node prev = head, cur = head.next;
-        boolean isInsert = false;
-        do {
-            if (prev.val <= insertVal && insertVal <= cur.val) {
-                // Case 1 : prev < insert < cur
-                isInsert = true;
-            } else if (prev.val > cur.val) {
-                // Case 2 : cur is the minimum node
-                // => 최대값보다 크거나, 최소값보다 작은 경우
-                if (prev.val <= insertVal || insertVal <= cur.val) {
-                    isInsert = true;
-                }
-            }
-
-            if (isInsert) {
-                prev.next = node;
-                node.next = cur;
-                return head;
-            }
-
+        while(cur != head && prev.val <= cur.val) {
             prev = cur;
             cur = cur.next;
-
-        } while (cur != head);
-
-
-        // cur == head && prev == tail : 
-        // all nodes are increasing && insertVal is maximum or minimum
-        prev.next = node;
-        node.next = cur;
+        }
+        
+        if(insertVal <= cur.val || insertVal >= prev.val) {
+            // prev -> node -> cur
+            prev.next = node;
+            node.next = cur;
+        } else  {
+            // find prev.val <= insertVal <= cur.val
+            while(insertVal > cur.val) {
+                prev = cur;
+                cur = cur.next;
+            }
+            prev.next = node;
+            node.next = cur;
+        }
         return head;
     }
 }
