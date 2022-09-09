@@ -15,29 +15,32 @@
  */
 class Solution {
     public int kthSmallest(TreeNode root, int k) {
-        Stack<TreeNode> inorder = new Stack<>();
-        inorder.push(root);
-
-        TreeNode cur, temp;
-        while (true) {
-            cur = inorder.pop();
-            // leaf node : visit!
-            if (cur.left == null && cur.right == null) {
+        Stack<TreeNode> dfs = new Stack<>();
+        dfs.push(root);
+        
+        TreeNode cur,temp;
+        while(!dfs.isEmpty()) {
+            cur = dfs.pop();
+            
+            // leaf node
+            if(cur.left == null && cur.right == null) {
                 k--;
-                if (k == 0) return cur.val;
+                if(k==0) return cur.val;
                 continue;
             }
-
-            if (cur.right != null) {
-                inorder.push(cur.right);
-                cur.right = null;
-            }
-
+            
+            // inorder : left -> cur -> right
+            if(cur.right != null) dfs.push(cur.right);
+            
             temp = cur.left;
+            cur.right = null;
             cur.left = null;
-            inorder.push(cur);
-
-            if (temp != null) inorder.push(temp);
+            dfs.push(cur);
+            
+            if(temp != null) dfs.push(temp);
         }
+        
+        // never reach
+        return -1;
     }
 }
