@@ -1,33 +1,30 @@
 public class ZigzagIterator {
+    
+    Iterator<Integer> cur, other;
 
-    Iterator<Integer> itr1, itr2, cur, other;
+    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
+        cur = v1.iterator();
+        other = v2.iterator();
+        
+        if(!cur.hasNext()) swap();
+    }
 
-        public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
-            itr1 = v1.iterator();
-            itr2 = v2.iterator();
+    public int next() {
+        int ret = cur.next();
+        
+        if(other.hasNext()) swap();
+        return ret;
+    }
 
-            if (itr1.hasNext()) {
-                cur = itr1;
-                other = itr2;
-            } else {
-                cur = itr2;
-                other = itr1;
-            }
-        }
-
-        public int next() {
-            int ret = cur.next();
-            if (other.hasNext()) {
-                Iterator<Integer> temp = cur;
-                cur = other;
-                other = temp;
-            }
-            return ret;
-        }
-
-        public boolean hasNext() {
-            return cur.hasNext();
-        }
+    public boolean hasNext() {
+        return cur.hasNext();
+    }
+    
+    private void swap() {
+        Iterator<Integer> temp = cur;
+        cur = other;
+        other = temp;
+    }
 }
 
 /**
