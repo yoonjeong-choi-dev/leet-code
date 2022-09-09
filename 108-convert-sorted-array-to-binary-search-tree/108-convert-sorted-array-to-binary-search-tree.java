@@ -15,21 +15,20 @@
  */
 class Solution {
     
-    private int[] nums;
+    private int[] inorder;
     
     public TreeNode sortedArrayToBST(int[] nums) {
-        this.nums = nums;
-        return recur(0, nums.length-1);
+        inorder = nums;
+        return convert(0, nums.length-1);
     }
     
-    private TreeNode recur(int start, int end) {
+    private TreeNode convert(int start, int end) {
         if(start > end) return null;
-        if(start == end) return new TreeNode(nums[start]);
         
-        int mid = start + (end - start) / 2;
-        TreeNode ans = new TreeNode(nums[mid]);
-        ans.left = recur(start, mid-1);
-        ans.right = recur(mid+1, end);
-        return ans;
+        int rootIdx = (start+end) / 2;
+        TreeNode ret = new TreeNode(inorder[rootIdx]);
+        ret.left = convert(start, rootIdx-1);
+        ret.right = convert(rootIdx+1, end);
+        return ret;
     }
 }
