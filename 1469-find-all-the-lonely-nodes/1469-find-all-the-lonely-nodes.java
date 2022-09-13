@@ -15,25 +15,23 @@
  */
 class Solution {
     public List<Integer> getLonelyNodes(TreeNode root) {
-        List<Integer> ans = new LinkedList<>();
-
-        Queue<TreeNode> bfs = new LinkedList<>();
+        List<Integer> ans = new ArrayList<>();
+        if(root == null) return ans;
+        
+        Queue<TreeNode> bfs = new ArrayDeque<>();
         bfs.add(root);
-
-        TreeNode curNode;
-        while (!bfs.isEmpty()) {
-            curNode = bfs.poll();
-
-            if (curNode.left == null && curNode.right != null) {
-                ans.add(curNode.right.val);
-            } else if (curNode.left != null && curNode.right == null) {
-                ans.add(curNode.left.val);
-            } 
+        
+        TreeNode cur;
+        while(!bfs.isEmpty()) {
+            cur = bfs.poll();
+            if((cur.left == null) ^ (cur.right == null)) {
+                if(cur.left != null) ans.add(cur.left.val);
+                else ans.add(cur.right.val);
+            }
             
-            if(curNode.left != null) bfs.add(curNode.left);
-            if(curNode.right != null) bfs.add(curNode.right);
+            if(cur.left != null) bfs.add(cur.left);
+            if(cur.right != null) bfs.add(cur.right);
         }
-
         return ans;
     }
 }
