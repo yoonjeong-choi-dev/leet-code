@@ -14,26 +14,29 @@
  * }
  */
 class Solution {
+    
     private List<List<Integer>> ans;
-
+    
     public List<List<Integer>> findLeaves(TreeNode root) {
         ans = new ArrayList<>();
-        getHeight(root);
-
+        removeLeaf(root);
         return ans;
     }
-
-    private int getHeight(TreeNode node) {
-        if (node == null) return 0;
-
-        int left = getHeight(node.left);
-        int right = getHeight(node.right);
-
-        int curHeight = Math.max(left, right) + 1;
-
-        while (ans.size() < curHeight) ans.add(new ArrayList<>());
-        ans.get(curHeight - 1).add(node.val);
-
-        return curHeight;
+    
+    // 노드를 루트로 하는 트리의 높이 반환
+    // => 리프 노드인 경우 1 반환
+    private int removeLeaf(TreeNode node) {
+        if(node == null) return 0;
+        
+        
+        int leftH = removeLeaf(node.left);
+        int rightH = removeLeaf(node.right);
+        
+        int curH = 1 + Math.max(leftH, rightH);
+        if(ans.size() < curH) ans.add(new ArrayList<>());
+        
+        ans.get(curH-1).add(node.val);
+        
+        return curH;
     }
 }
