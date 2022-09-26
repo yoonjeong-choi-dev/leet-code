@@ -1,57 +1,55 @@
 class Solution {
     public boolean equationsPossible(String[] equations) {
-        // 소문자로 구성된 그래프
-        // == 관계인 경우에 엣지 연결
-        List<List<Integer>> graph = new ArrayList<>(26);
-        for (int i = 0; i < 26; i++) graph.add(new ArrayList<>());
-
-        int num1, num2;
-        for (String eq : equations) {
-            if (eq.charAt(1) == '=') {
-                num1 = eq.charAt(0) - 'a';
-                num2 = eq.charAt(3) - 'a';
-
-                graph.get(num1).add(num2);
-                graph.get(num2).add(num1);
+        // Build a graph 
+        List<List<Integer>> graph = new ArrayList<>();
+        
+        // variables : lowercase letter
+        for(int i=0;i<26;i++) graph.add(new ArrayList<>());
+        
+        int from, to;
+        for(String eq : equations) {
+            if(eq.charAt(1) == '=') {
+                from = eq.charAt(0) - 'a';
+                to = eq.charAt(3) -'a';
+                
+                
+                graph.get(from).add(to);
+                graph.get(to).add(from);
             }
         }
-
-        // 두 값이 같은 경우 같은 컴포넌트
-        int[] componentMap = new int[26];
-        for (int i = 0; i < 26; i++) componentMap[i] = -1;
-
-        int curComponent = 0;
-        Stack<Integer> dfs = new Stack<>();
-        int cur;
-        for (int i = 0; i < 26; i++) {
-            if (componentMap[i] == -1) {
-                dfs.add(i);
-
-                while (!dfs.isEmpty()) {
+        
+        int[] components = new int[26];
+        Arrays.fill(components, -1);
+        
+        Deque<Integer> dfs = new ArrayDeque<>();
+        int curComponent = 0, cur;
+        for(int i=0;i<26;i++){
+            if(components[i] == -1) {
+                dfs.push(i);
+                components[i] = curComponent;
+                
+                while(!dfs.isEmpty()) {
                     cur = dfs.pop();
-                    componentMap[cur] = curComponent;
-
-                    for (int next : graph.get(cur)) {
-                        if (componentMap[next] == -1) {
+                    for(int next : graph.get(cur)) {
+                        if(components[next] == -1) {
+                            components[next] = curComponent;
                             dfs.push(next);
                         }
                     }
                 }
-
                 curComponent++;
             }
         }
-
-        for (String eq : equations) {
-            // 다른 값이 같은 컴포넌트에 있는 경우 거짓
-            if (eq.charAt(1) == '!') {
-                num1 = eq.charAt(0) - 'a';
-                num2 = eq.charAt(3) - 'a';
-                if (num1 == num2 || componentMap[num1] == componentMap[num2]) return false;
+        
+        for(String eq : equations) {
+            if(eq.charAt(1) == '!') {
+                from = eq.charAt(0) - 'a';
+                to = eq.charAt(3) -'a';
+                
+                
+                if(from == to || components[from] == components[to]) return false;
             }
         }
-
-
         return true;
     }
 }
