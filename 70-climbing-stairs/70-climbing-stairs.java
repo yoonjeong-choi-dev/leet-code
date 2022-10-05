@@ -1,15 +1,16 @@
 class Solution {
     public int climbStairs(int n) {
         // f(n) = f(n-1) + f(n-2)
-        if(n<2) return 1;
+        // f(1) == 1, f(2) = 2
+        if(n<=2) return n;
         
-        int prev = 1, cur = 1, temp;
-        for(int i=2;i<=n;i++){
-            temp = prev + cur;
-            prev = cur;
-            cur = temp;
+        int f_1 = 2, f_2 = 1, temp;
+        
+        for(int i=3;i<=n;i++){
+            temp = f_1;
+            f_1 = f_1 + f_2;
+            f_2 = temp;
         }
-        
-        return cur;
+        return f_1;
     }
 }
